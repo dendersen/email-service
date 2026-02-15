@@ -1,1 +1,1 @@
-ha
+handles simple emails, both recieving and sending
