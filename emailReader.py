@@ -20,22 +20,24 @@ class mailReader:
     self.updateInbox()
     self.latestEmail: email | None = None
   
-  def updateInbox(self):
+  def updateInbox(self, targetBox:str = "inbox", unread: bool = True, term: str = ""):
     with imaplib.IMAP4_SSL(self.imap_url) as mail:
       status, response = mail.login(self.username, self.password)
       if status != "OK":
         raise ValueError("Failed to login")
       
-      status, response = mail.select("inbox", readonly=True)
+      status, response = mail.select(targetBox, readonly=True)
       if status != "OK":
         raise ValueError("Failed to select inbox")
       if(type(response) != list):
         raise ValueError("Unexpected response type: {}".format(type(response)))
       if(type(response[0]) != bytes):
         raise ValueError("Unexpected response content type: {}".format(type(response[0])))
-      messageCount = int.from_bytes(response[0])
       
-      status, response = mail.search(None, "(UNSEEN)")
+      if(unread):
+        status, response = mail.search(None, "(UNSEEN)",term)
+      else:
+        status, response = mail.search(None, "ALL",term)
       if status != "OK":
         raise ValueError("Failed to search for unseen emails")
       if(type(response) != list):
