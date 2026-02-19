@@ -7,7 +7,6 @@ class emailHandler:
       self.mailReader = mailReader
     
     def __iter__(self):
-      self.mailReader.updateInbox()
       return self
     
     def __next__(self) -> emailReader.email:
@@ -35,8 +34,23 @@ class emailHandler:
     self.mailWriter.createEmail(subject, body)
     self.mailWriter.sendEmail(recipients)
   
-  def specific(self, box: str, sender: str) -> list[emailReader.email]:
-    self.mailReader.updateInbox(targetBox=box, unread=False, term='FROM "{}"'.format(sender))
+  def specific(self, box: str | None = None, sender: str | None = None, unread: bool = False) -> None:
+    if box is None:
+      box = "inbox"
+    if sender is None:
+      sender = ""
+    elif not sender.startswith('FROM "'):
+      sender = 'FROM "{}"'.format(sender)
+    self.mailReader.updateInbox(targetBox=box, unread=unread, term=sender)
+  
+  def specificList(self, box: str | None = None, sender: str | None = None, unread: bool = False) -> list[emailReader.email]:
+    if box is None:
+      box = "inbox"
+    if sender is None:
+      sender = ""
+    else:
+      sender = 'FROM "{}"'.format(sender)
+    self.specific(box, sender, unread)
     matches: list[emailReader.email] = []
     for email in self.getAllEmails(reloadInbox=False):
       if sender.lower() in email.sender.lower():

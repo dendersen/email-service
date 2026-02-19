@@ -37,7 +37,7 @@ class mailReader:
       if(unread):
         status, response = mail.search(None, "(UNSEEN)",term)
       else:
-        status, response = mail.search(None, "ALL",term)
+        status, response = mail.search(None, "ALL", term)
       if status != "OK":
         raise ValueError("Failed to search for unseen emails")
       if(type(response) != list):
@@ -70,7 +70,7 @@ class mailReader:
       msg = Parser(policy=default).parsestr(data[0][1].decode())
       
       subject = msg["subject"]
-      sender = msg["from"]
+      sender = msg["from"].split("<")[-1].split(">")[0] #get email from sender field, works for both "Name <email>" and "email"
       date = msg["date"]
       body = msg.get_body(preferencelist=('plain'))
       if body is not None:
