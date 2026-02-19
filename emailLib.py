@@ -1,5 +1,5 @@
-import emailReader
-import emailWriter
+from . import emailReader
+from . import emailWriter
 
 class emailHandler:
   class emailIterator:
