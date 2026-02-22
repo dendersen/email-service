@@ -9,6 +9,20 @@ class mailWriter:
     self.currentEmail: EmailMessage | None = None
     self.recipients: list[str] | str = []
   
+  def lock(self):
+    self.username: str = ""
+    self.password: str = ""
+    self.smpt_url: str = ""
+    self.currentEmail: EmailMessage | None = None
+    self.recipients: list[str] | str = []
+  
+  def unlock(self, username: str, password: str, smpt_url: str):
+    self.username: str = username
+    self.password: str = password
+    self.smpt_url: str = smpt_url
+    self.currentEmail: EmailMessage | None = None
+    self.recipients: list[str] | str = []
+  
   def createEmail(self, subject: str, body: str):
     self.currentEmail = EmailMessage()
     self.currentEmail.set_content(body)

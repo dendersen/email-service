@@ -25,6 +25,14 @@ class emailHandler:
     self.mailReader = emailReader.mailReader(username, password, imap_url)
     self.mailWriter = emailWriter.mailWriter(username, password, smpt_url)
   
+  def lock(self):
+    self.mailReader.lock()
+    self.mailWriter.lock()
+  
+  def unlock(self, username: str, password: str, imap_url: str, smpt_url: str):
+    self.mailReader.unlock(username, password, imap_url)
+    self.mailWriter.unlock(username, password, smpt_url)
+  
   def getAllEmails(self,reloadInbox: bool = True) -> emailIterator:
     if reloadInbox:
       self.mailReader.updateInbox()

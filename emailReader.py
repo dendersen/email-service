@@ -25,6 +25,24 @@ class mailReader:
     self.updateInbox()
     self.latestEmail: email | None = None
   
+  def lock(self):
+    self.username: str = ""
+    self.password: str = ""
+    self.imap_url: str = ""
+    self.IDs: list[bytes] = []
+    self.nextIndex: int = -1
+    self.updateInbox()
+    self.latestEmail: email | None = None
+  
+  def unlock(self, username: str, password: str, imap_url: str):
+    self.username: str = username
+    self.password: str = password
+    self.imap_url: str = imap_url
+    self.IDs: list[bytes] = []
+    self.nextIndex: int = -1
+    self.updateInbox()
+    self.latestEmail: email | None = None
+  
   def updateInbox(self, targetBox:str = "inbox", unread: bool = True, term: str = ""):
     with imaplib.IMAP4_SSL(self.imap_url) as mail:
       status, response = mail.login(self.username, self.password)
