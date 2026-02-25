@@ -1,5 +1,18 @@
 from . import emailReader
 from . import emailWriter
+from typing import Callable
+
+class email:
+  def __init__(self, subject, sender, date, body, idNumber, markedAsReadFunc: Callable[["email | None", bytes | None], None] | None = None):
+    self.subject: str = subject
+    self.sender: str = sender
+    self.date: str = date
+    self.body: str = body
+    self.idNumber: bytes = idNumber
+    self.markFunc: Callable[["email | None", bytes | None], None] | None = markedAsReadFunc 
+  def markAsRead(self):
+    if self.markFunc is not None:
+      self.markFunc(self,None)
 
 class emailHandler:
   class emailIterator:
@@ -9,7 +22,7 @@ class emailHandler:
     def __iter__(self):
       return self
     
-    def __next__(self) -> emailReader.email:
+    def __next__(self) -> email:
       try:
         nextEmail = self.mailReader.getNext()
         if nextEmail is None:
@@ -59,8 +72,8 @@ class emailHandler:
     else:
       sender = 'FROM "{}"'.format(sender)
     self.specific(box, sender, unread)
-    matches: list[emailReader.email] = []
-    for email in self.getAllEmails(reloadInbox=False):
-      if sender.lower() in email.sender.lower():
-        matches.append(email)
+    matches: list[email] = []
+    for email_ in self.getAllEmails(reloadInbox=False):
+      if sender.lower() in email_.sender.lower():
+        matches.append(email_)
     return matches

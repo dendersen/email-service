@@ -1,19 +1,7 @@
 import imaplib
+from .emailLib import *
 from email.parser import Parser
 from email.policy import default
-from typing import Callable
-
-class email:
-  def __init__(self, subject, sender, date, body, idNumber, markedAsReadFunc: Callable[["email | None", bytes | None], None] | None = None):
-    self.subject: str = subject
-    self.sender: str = sender
-    self.date: str = date
-    self.body: str = body
-    self.idNumber: bytes = idNumber
-    self.markFunc: Callable[["email | None", bytes | None], None] | None = markedAsReadFunc 
-  def markAsRead(self):
-    if self.markFunc is not None:
-      self.markFunc(self,None)
 
 class mailReader:
   def __init__(self, username: str, password: str, imap_url: str):
